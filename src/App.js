@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{ useState }  from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Inicio from './Componentes/Inicio';
+import Login from './Componentes/Login';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import app from './Firebase/Firebase'
+const auth=getAuth(app)
 
 function App() {
+  const [user,setUser]= useState(null)
+ 
+      onAuthStateChanged(auth, (usuarioFirebase) => {
+        if (usuarioFirebase) {
+          //código en caso de que haya sesión inciiada
+          setUser(usuarioFirebase.email);
+        } else {
+          //código en caso de que no haya sesión iniciada
+          setUser(null);
+        }
+      });
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {user ? <Inicio user={user} />: <Login />}
     </div>
   );
 }
