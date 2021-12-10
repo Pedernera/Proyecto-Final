@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import {Offcanvas,Button,ListGroup} from "react-bootstrap"
 import {guardarDocumento, obtenerDatos} from  '../../Firebase/DataBase'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faShoppingCart,faBan} from '@fortawesome/free-solid-svg-icons'
+import {faShoppingCart} from '@fortawesome/free-solid-svg-icons'
 export default function RealizarPedido(props) {
     const [show, setShow] = useState(false);
     const [elim, setElim] = useState(false)

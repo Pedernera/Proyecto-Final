@@ -1,5 +1,5 @@
 import app from "./Firebase"
-import { collection,getDocs, getFirestore,doc,getDoc, setDoc,addDoc,deleteDoc,updateDoc} from "firebase/firestore";
+import { collection,getDocs, getFirestore,doc,getDoc, setDoc,addDoc,deleteDoc,updateDoc,query, where} from "firebase/firestore";
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,signInWithRedirect,GoogleAuthProvider} from 'firebase/auth'
 import { getStorage, ref, uploadBytes,getDownloadURL} from "firebase/storage";
 const storage = getStorage(app);
@@ -75,10 +75,22 @@ const googleProvider = new GoogleAuthProvider();
         } else {
           
           return false
-        }
-        
+        }  
     }
 
+    export const obtenerDocumentoId = async (coleccion,id)=>{
+      let datos=[]
+      const q = query(collection(db, coleccion), where('idUsuario', "==", id));
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        let obj=doc.data()
+          obj.id=doc.id
+          datos.push(obj)
+      });
+      return datos
+    }
+    
     export const guardarDocumento=async(coleccion, documento)=>{
 
       const docRef = await addDoc(collection(db, coleccion), documento);

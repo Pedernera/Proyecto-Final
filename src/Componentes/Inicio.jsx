@@ -2,15 +2,15 @@ import React,{useState,useEffect} from 'react'
 import {obtenerDatosId}from '../Firebase/DataBase'
 import CompletarRegistro from './CompletarRegistro'
 
+import BarraDeNavegacion from './BarraDeNavegacion'
+import MisPedidos from './VistaUsuario/MisPedidos'
+import {BrowserRouter,Switch,Route} from 'react-router-dom'
 import ListaPedidos from './VistaAdmin/ListaPedidos'
-import AdminView from './VistaAdmin/AdminView'
-import UserView from './VistaUsuario/UserView'
-import {BrowserRouter,Switch,Route} from 'react-router-dom';
-
+import ListarPlatos from './VistaUsuario/ListarPlatos'
 export default function Inicio(props) {
     const [userActual,setUserActual]=useState(null)
     const [cargarDatos,setCargarDatos]=useState(false)
-    
+    let pedido=[]
     useEffect(()=>{
         obtenerDatos()
         
@@ -24,18 +24,45 @@ export default function Inicio(props) {
             setCargarDatos(true)
         }
     }
-
+    
+    const insertPlato=(value)=>{
+        pedido.push(value)
+    }
     
     return (
         <>
-            {userActual &&(
+            <BrowserRouter>
+                
+                {userActual &&(
+                 
                 <>
-                    {userActual.rol === "admin" ? <AdminView userActual={userActual}/> : <UserView userActual={userActual}/>}
+                <BarraDeNavegacion user={userActual} pedido={pedido}></BarraDeNavegacion>
+                <Switch>
+                {userActual.rol === "admin" ?(
+                    <>
+                    <Route exact path="/" >
+                    <ListaPedidos></ListaPedidos>
+                    </Route>
+                    </>
+                ):(
+                    <>
+                    <Route exact path="/" >
+                        <ListarPlatos insertPlato={insertPlato}></ListarPlatos>
+                    </Route> 
+                    <Route path="/mispedidos">
+                        <MisPedidos user={userActual}></MisPedidos>
+                    </Route>
+                    </>
+                )}
+                </Switch>
                 </>
-            )}
-            {cargarDatos &&(
+                
+                )}
+                {cargarDatos &&(
                 <CompletarRegistro id={props.user} setCargarDatos={setCargarDatos}></CompletarRegistro>
-            )}
+                )}
+               
+            </BrowserRouter>
         </>
     )
 }

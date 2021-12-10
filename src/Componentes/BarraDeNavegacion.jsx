@@ -3,28 +3,28 @@ import {Navbar,NavDropdown,Nav,Container} from "react-bootstrap"
 import {cerrarSesion}from '../Firebase/DataBase'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTradeFederation} from '@fortawesome/free-brands-svg-icons'
-
+import {Link} from 'react-router-dom'
 import RealizarPedido from '../Componentes/VistaUsuario/RealizarPedido'
 const BarraDeNavegacion =(props)=>{  
-  
+    
     return(
       <>
+       
        <Navbar variant="dark" bg="dark" expand="lg">
           <Container fluid>
-              <Navbar.Brand href="#home">
-              <FontAwesomeIcon icon={faTradeFederation} color="white" />
-              {' '}
-              FdPedidos
-              </Navbar.Brand>
-              
+              <Link to="/"className="nav-link">
+                <Navbar.Brand >
+                <FontAwesomeIcon icon={faTradeFederation} color="white" />
+                {' '}
+                FdPedidos
+                </Navbar.Brand>
+              </Link>
               <Navbar.Toggle  />
-            
-              
-           
               <Navbar.Collapse className="justify-content-end">
-              
-              <Nav>
-                  <Nav.Link className="mx-2" href="#pricing">Mis Pedidos</Nav.Link>
+                <Nav>
+                {props.user.rol === "usuario" &&(
+                  <Link to="/mispedidos" className="nav-link">Mis Pedidos</Link>
+                )}
                   <NavDropdown
                       title={props.user.nombre + " " + props.user.apellido}
                       menuVariant="dark"
@@ -37,7 +37,9 @@ const BarraDeNavegacion =(props)=>{
                   </NavDropdown>
                 </Nav>
               </Navbar.Collapse>
-              <RealizarPedido pedido={props.pedido} user={props.user}></RealizarPedido>
+              {props.user.rol === "usuario" &&(
+                 <RealizarPedido pedido={props.pedido} user={props.user}></RealizarPedido>
+              )}
           </Container>
         </Navbar>
     </>

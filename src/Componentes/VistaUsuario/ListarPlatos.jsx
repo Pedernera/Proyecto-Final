@@ -4,16 +4,16 @@ import { obtenerDatos} from  '../../Firebase/DataBase'
 import TarjetaPlato from './TarjetaPlato'
 export default function ListarPlatos(props) {
     const [platos,setPlatos]= useState(null)
-    const [actualizar, setActualizar]= useState(false)
+    
     useEffect(()=>{
         obtenerPlatos()
-    },[actualizar])
+    },[])
     
     const agregarPlato=(e)=>{
         props.insertPlato(e.target.value)
     }
 
-    const obtenerPlatos =async()=>{
+    const obtenerPlatos =async()=>{ 
        let data= await obtenerDatos('plato')
         setPlatos(data)
     }
@@ -38,7 +38,6 @@ export default function ListarPlatos(props) {
         <>
            {platos &&(
                <>
-               <Button onClick={()=>{setActualizar(!actualizar)}}>Actualizar</Button>
                <ListGroup>
                {getCards()}
                 </ListGroup> 

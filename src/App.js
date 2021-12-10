@@ -4,6 +4,7 @@ import Inicio from './Componentes/Inicio';
 import Login from './Componentes/Login';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import app from './Firebase/Firebase'
+
 const auth=getAuth(app)
 
 function App() {
