@@ -1,12 +1,12 @@
 import React,{useState,useEffect} from 'react'
 import {obtenerDatosId}from '../Firebase/DataBase'
 import CompletarRegistro from './CompletarRegistro'
-
 import BarraDeNavegacion from './BarraDeNavegacion'
 import MisPedidos from './VistaUsuario/MisPedidos'
 import {BrowserRouter,Switch,Route} from 'react-router-dom'
-import ListaPedidos from './VistaAdmin/ListaPedidos'
+import NavAdmin from './VistaAdmin/NavAdmin'
 import ListarPlatos from './VistaUsuario/ListarPlatos'
+import Menu from './VistaAdmin/Menu'
 export default function Inicio(props) {
     const [userActual,setUserActual]=useState(null)
     const [cargarDatos,setCargarDatos]=useState(false)
@@ -28,7 +28,10 @@ export default function Inicio(props) {
     const insertPlato=(value)=>{
         pedido.push(value)
     }
-    
+    //diagrama de clases
+    //diagrama de casos de usos
+    //diadrama de componentes
+    //diagrama de despliege
     return (
         <>
             <BrowserRouter>
@@ -41,7 +44,10 @@ export default function Inicio(props) {
                 {userActual.rol === "admin" ?(
                     <>
                     <Route exact path="/" >
-                    <ListaPedidos></ListaPedidos>
+                        <NavAdmin></NavAdmin>
+                    </Route>
+                    <Route path="/menu" >
+                        <Menu></Menu>
                     </Route>
                     </>
                 ):(

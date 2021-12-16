@@ -24,6 +24,7 @@ export default function ModalDetallePedido(props) {
         }
         
     }
+    
     const cargar =()=>{
        let platoBuscado
        function buscar(id){

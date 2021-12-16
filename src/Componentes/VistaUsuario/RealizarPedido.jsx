@@ -1,14 +1,17 @@
 import React,{useState,useEffect} from 'react'
-import {Offcanvas,Button,ListGroup} from "react-bootstrap"
+import {Offcanvas,Button,ListGroup,Form} from "react-bootstrap"
 import {guardarDocumento, obtenerDatos} from  '../../Firebase/DataBase'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faShoppingCart} from '@fortawesome/free-solid-svg-icons'
+import {faTimesCircle} from '@fortawesome/free-regular-svg-icons'
 export default function RealizarPedido(props) {
     const [show, setShow] = useState(false);
     const [elim, setElim] = useState(false)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [platos,setPlatos]= useState(null)
+    const [pago,setPago]=useState(null)
+    const [tipoDePago,setTipoDePago]=useState(null)
     let precioTotal=0
     let noHayPedido=true
     useEffect(()=>{
@@ -16,12 +19,14 @@ export default function RealizarPedido(props) {
     },[])
    
     useEffect(()=>{
-      cargar()
+      cargarPlatos()
    },[elim])
 
     const obtenerPlatos =async()=>{
        let data= await obtenerDatos('plato')
         setPlatos(data)
+        data= await obtenerDatos('pago')
+        setPago(data)
     }
     
     function buscarPlato(idPlato){
@@ -33,31 +38,48 @@ export default function RealizarPedido(props) {
     }
   }
 
-    const eliminar=(event)=>{
-        let i = props.pedido.indexOf( event.target.value );
+    const eliminar=(id)=>{
+        let i = props.pedido.indexOf(id);
         i !== -1 && props.pedido.splice( i, 1 );
         setElim(!elim)
     }
 
     const elimTodo=()=>{
-
-     
         props.pedido.splice( 0, props.pedido.length )
-      
-      
-      setElim(!elim)
+       setElim(!elim)
   }
 
     
     const agregar = async()=>{
-      
-       let obj ={listadoPlatos: props.pedido, idUsuario: props.user.id,estado: null,precioTotal: precioTotal}
+     
+       let obj ={listadoPlatos: props.pedido, 
+                 idUsuario: props.user.id,
+                 estado: null,
+                 precioTotal: precioTotal,
+                 calificacion:0,
+                 idPago:tipoDePago}
+                 
        await guardarDocumento('pedido',obj)
        elimTodo()
        setShow(false)
    }
+    const cargarPago=()=>{
+      const listPagos = pago.map(p=>{
+        return (
+          <>
+            <Form.Check
+              label={p.tipoDePago}
+              name="group1"
+              type="radio"
+              onClick={()=>{setTipoDePago(p.id)}}
+             />
+          </>
+      )
+      })
+      return listPagos
 
-    const cargar=()=>{
+    }
+    const cargarPlatos=()=>{
         let lista;
 
         if(props.pedido.length > 0){
@@ -75,8 +97,8 @@ export default function RealizarPedido(props) {
                       <div className="fw-bold">{platos[pos].nombre}</div>
                       $ {platos[pos].precio}
                     </div>
-                    <Button value={p} onClick={eliminar} variant="link">
-                     eliminar
+                    <Button onClick={()=>{eliminar(p)}} variant="link">
+                    <FontAwesomeIcon  icon={faTimesCircle} className="fa-2x"  color="red" />
                     </Button>
                     </ListGroup.Item>
                     </>
@@ -98,10 +120,16 @@ export default function RealizarPedido(props) {
         </Offcanvas.Header>
         <Offcanvas.Body>
             <ListGroup as="ol" numbered>
-                {platos && 
+                {platos && pago &&
                 <>
-                  {cargar()}
-                    Precio Total: $ {precioTotal}
+                  {cargarPlatos()}
+                  <ListGroup.Item>
+                    <h6>Seleccionar Tipo de Pago</h6>
+                    {cargarPago()}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <h6>Precio Total: $ {precioTotal}</h6>
+                  </ListGroup.Item>
                     <Button  onClick={agregar} variant="danger" disabled={noHayPedido}>
                      Realizar Pedido
                     </Button>

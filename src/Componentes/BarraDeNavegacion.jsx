@@ -22,8 +22,10 @@ const BarraDeNavegacion =(props)=>{
               <Navbar.Toggle  />
               <Navbar.Collapse className="justify-content-end">
                 <Nav>
-                {props.user.rol === "usuario" &&(
+                {props.user.rol === "usuario" ?(
                   <Link to="/mispedidos" className="nav-link">Mis Pedidos</Link>
+                ):(
+                  <Link to="/menu" className="nav-link">Menu</Link>
                 )}
                   <NavDropdown
                       title={props.user.nombre + " " + props.user.apellido}
@@ -38,7 +40,7 @@ const BarraDeNavegacion =(props)=>{
                 </Nav>
               </Navbar.Collapse>
               {props.user.rol === "usuario" &&(
-                 <RealizarPedido pedido={props.pedido} user={props.user}></RealizarPedido>
+                <RealizarPedido pedido={props.pedido} user={props.user}></RealizarPedido>
               )}
           </Container>
         </Navbar>

@@ -90,6 +90,38 @@ const googleProvider = new GoogleAuthProvider();
       });
       return datos
     }
+
+    export const obtenerPedidoEstado = async (estado)=>{
+      
+      
+     let datos=[]
+     let q,a
+     
+        q=query(collection(db, 'pedido'), where('estado', '==', estado))
+        const querySnapshot = await getDocs(q);
+      
+        querySnapshot.forEach((doc) => {
+          let obj=doc.data()
+            obj.id=doc.id
+            datos.push(obj)
+            
+        });
+        if(!estado){
+          a=query(collection(db, 'pedido'), where('estado', '==', null))
+          const querySnapshot1 = await getDocs(a);
+      
+        querySnapshot1.forEach((doc) => {
+          let obj=doc.data()
+            obj.id=doc.id
+            datos.push(obj)
+            
+        });
+        }
+        return datos
+      }
+  
+     
+     
     
     export const guardarDocumento=async(coleccion, documento)=>{
 
@@ -110,8 +142,15 @@ const googleProvider = new GoogleAuthProvider();
 
     export const actualizarDocumento=async(coleccion,documento,act)=>{
       const docRef = doc(db, coleccion, documento);
-      // Set the "capital" field of the city 'DC'
+      
       await updateDoc(docRef, {
         estado: act
+      });
+    }
+
+    export const actualizarCalificacion=async(coleccion,documento,act)=>{
+      const docRef = doc(db, coleccion, documento);
+      await updateDoc(docRef, {
+        calificacion: act
       });
     }
