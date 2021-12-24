@@ -22,13 +22,17 @@ export default function ListarPlatos(props) {
         const cards = platos.map( (p)=>{
           
           return(
-            <TarjetaPlato  
-                  precio={p.precio} 
-                  urlImg={p.urlImg}
-                  id={p.id}
-                  nombre={p.nombre}
-                  agregar={agregarPlato}
-              />
+            <>
+                {p.disponible &&(
+                    <TarjetaPlato  
+                    precio={p.precio} 
+                    urlImg={p.urlImg}
+                    id={p.id}
+                    nombre={p.nombre}
+                    agregar={agregarPlato}
+                />
+                )}
+            </>
           )
           
         })

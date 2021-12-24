@@ -43,9 +43,10 @@ const googleProvider = new GoogleAuthProvider();
      }
      export const guardarDocumentoPlato=async(coleccion, documento)=>{
      const urlImg = await subirArchivo(documento.img) 
-     const obj={nombre:documento.nombre, precio:documento.precio,urlImg:urlImg}
-     await addDoc(collection(db, coleccion), obj);
-      
+
+     const obj={nombre:documento.nombre, precio:documento.precio,urlImg:urlImg,disponible:true}
+     console.log(obj)
+     await addDoc(collection(db, coleccion), obj)
     }
     export const obtenerDatos = async(coleccion) =>{
       const datos=[]
@@ -147,7 +148,16 @@ const googleProvider = new GoogleAuthProvider();
         estado: act
       });
     }
-
+    export const actualizarPlato=async(documento,propiedad,actualizacion)=>{
+      const docRef = doc(db, "plato", documento.id);
+      
+      await updateDoc(docRef, {
+        nombre: propiedad === "nombre" ? actualizacion : documento.nombre,
+        disponible: propiedad === "disponible"? actualizacion : documento.disponible,
+        precio: propiedad === "precio"? actualizacion : documento.precio,
+        urlImg: propiedad === "imagen"? actualizacion : documento.urlImg
+      });
+    }
     export const actualizarCalificacion=async(coleccion,documento,act)=>{
       const docRef = doc(db, coleccion, documento);
       await updateDoc(docRef, {

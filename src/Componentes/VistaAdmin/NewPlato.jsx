@@ -1,35 +1,27 @@
 import React,{useState} from 'react'
-import { Modal, Button,Form, Row, Col } from 'react-bootstrap';
+import { Container,Stack, Button,Form } from 'react-bootstrap';
 import { guardarDocumentoPlato} from  '../../Firebase/DataBase'
 
-export default function NewPlato() {
-    const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const [validated, setValidated] = useState(false);
-
+export default function NewPlato(props) {
+   
     const [tituloPub,setTituloPub]=useState(null)
     const [precioPub,setPrecioPub]=useState(null)
     const [imgPub,setImgPub]=useState('')
     const [previewImgPub,setPreviewImgPub]=useState('')
     const handleSubmit = (event) => {
-      const form = event.currentTarget;
-      
-      if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-  
-      setValidated(true);
+      event.preventDefault();
       guardarDatos()
       
     };
 
-    function guardarDatos(){
+   async function guardarDatos(){
         let obj ={nombre:tituloPub,precio:precioPub,img:imgPub}
-        guardarDocumentoPlato('plato',obj)
-        alert('guardar')
-         handleClose()            
+        await guardarDocumentoPlato('plato',obj)
+        setTituloPub('')
+        setPrecioPub(null)
+        setImgPub(null)
+        setPreviewImgPub(null)
+        props.volver()     
     }
 
     const handleTituloPub=(event)=>{
@@ -47,63 +39,51 @@ export default function NewPlato() {
 
     return (
         <>
-        <Button variant="primary" onClick={handleShow}>
-        Nueva Publicacion
-        </Button>
-        <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-            <Modal.Title>Nueva Publicacion</Modal.Title>
-            </Modal.Header>
-
-            <Modal.Body>
-            <Form noValidate validated={validated} onSubmit={handleSubmit}> 
+        <Container >
+            <Stack gap={3} >
+            <Form  onSubmit={handleSubmit} className={'m-auto'}> 
                 
-                <Row className="mb-3 mx-2">
-                <Form.Group as={Col}  controlId="validationCustom01">
+                <Form.Group style={{width:"300px"}}>
                   <Form.Label >Titulo</Form.Label>
                   <Form.Control 
                         type="text" 
                         placeholder="Titulo"
-                        onChange={handleTituloPub} 
+                        onChange={handleTituloPub}
+                        value={tituloPub} 
                         required />
                 </Form.Group>
-                </Row>
-
-              
-                <Row className="mb-3 mx-2">
-                    <Form.Group as={Col}  controlId="validationCustom01">
+                
+                <Form.Group style={{width:"300px"}}>
                   <Form.Label>Precio</Form.Label>
                   <Form.Control 
                         type="number" 
                         placeholder="$"
                         onChange={handlePrecioPub} 
+                        value={precioPub}
                         required />
                 </Form.Group>   
-                </Row>
+            
+                <Form.Group style={{width:"300px"}}>
+                <Form.Label>imagen</Form.Label>
+                <Form.Control type="file" onChange={handleImgPub} />
+                </Form.Group>
 
-                <Row className="mb-3 mx-2">
-                    <Form.Group as={Col}>
-                    <Form.Label>imagen</Form.Label>
-                    <Form.Control type="file" onChange={handleImgPub}/>
-                    </Form.Group>
-
-                    <Form.Group className="d-flex mt-2 justify-content-center">
+                    <Form.Group className="d-flex mt-2 justify-content-center" style={{width:"300px"}}>
                     {previewImgPub && (
                     <img style={{height:'25vh'}}src={previewImgPub}/>
                     )}
                     </Form.Group>
-                </Row>
-            </Form>
-            </Modal.Body>
-            <Modal.Footer>
-                 <Button variant="secondary" onClick={handleClose}>
-                    Cancelar
-                </Button>
-                <Button variant="primary" type="submit" onClick={handleSubmit}>
+                
+                <Button variant="primary" type="submit" style={{width:"300px"}}>
                     Guardar
                 </Button>
-            </Modal.Footer>
-        </Modal>
+            
+            </Form>     
+            </Stack>
+        </Container>   
         </>
     )
 }
+        
+                
+          
